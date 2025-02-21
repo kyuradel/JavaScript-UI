@@ -1,0 +1,36 @@
+.alert-box {
+    background-color: skyblue;
+    padding: 20px;
+    color: white;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.alert-box p {
+    display: inline-block;
+}
+
+.alert-box p:first-child {
+    font-weight: bold;
+}
+
+.alert-box .close-btn {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.btn-box {
+    background-color: #BA2C3B;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+}
+
+.open {
+    display: none;
+}
