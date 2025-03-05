@@ -8,9 +8,30 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="main.css">
+ 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
   </head>
   <body>
 
+   
+    <div class="black-bg">
+      <div class="white-bg">
+        <h4>로그인하세요</h4>
+
+        <form action="success.html">
+          <div class="my-3">
+            <input type="text" class="form-control" id="email">
+           </div>
+           <div class="my-3">
+             <input type="password" class="form-control">
+           </div>
+           <button type="submit" class="btn btn-primary" id="send">전송</button>
+           <button type="button" class="btn btn-danger" id="close">닫기</button>
+        </form> 
+
+      </div>
+    </div> 
 
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
@@ -28,11 +49,65 @@
         <li class="list-group-item">And a fifth one</li>
     </ul>
 
+    <div class="main-bg">
+      <h4>Shirts on Sale</h4>
+      <button id="login" class="btn btn-danger">로그인</button>
+    </div>
+    
+  
+
+
     <script>
-        document.querySelector('.navbar-toggler').addEventListener('click', function(){
-            document.querySelectorAll('.list-group')[0].classList.toggle('show');
-        })
+
+      
+
+      // 전송버튼 누르면
+      // 저기 input에 입력한값이 공백이면 알림창띄워주세요~
+      $('form').on('submit', function(e) {
+        if (document.getElementById('email').value == '') {
+          alert('아이디입력안함');
+          e.preventDefault(); // 폼 전송 막음
+        }
+      });
+
+      $('#login').on('click', function(){
+        $('.black-bg').addClass('show-modal');
+      });
+      /*
+      $('.black-bg').hide();
+
+      $('#login').on('click', function(){
+        $('.black-bg').fadeIn();
+      })
+      */
+      $('#close').on('click', function(){
+        $('.black-bg').removeClass('show-modal');
+      })  
+
+
+      function checkId() {
+        let userId = document.querySelector("#userId");
+        let userId_val = userId.value.trim();
+
+        if(userId_val === "") {
+          alert("아이디를 입력해주세요.");
+          userId.focus();
+          return false;
+        }
+        return true;
+      }
+
+      
+
+      document.querySelector('.navbar-toggler').addEventListener('click', function(){
+          document.querySelectorAll('.list-group')[0].classList.toggle('show');
+      })
+
+
         
+      
+      
+       
 
         /*
         document.getElementsByClassName('navbar-toggler')[0].addEventListener('click', function(){
@@ -42,6 +117,6 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+    
   </body>
 </html>
