@@ -32,10 +32,29 @@
 
       </div>
     </div> 
+<!--
+    <div class="black-bg">
+      <div class="white-bg">
+        <h4>로그인하세요</h4>
 
+        <form action="success.html" onsubmit="return checkId();">
+          <div class="my-3">
+            <input type="text" class="form-control" id="userId">
+          </div>
+          <div class="my-3">
+            <input type="password" class="form-control" id="userPw">
+          </div>
+          <button type="submit" class="btn btn-primary">전송</button>
+          <button type="button" class="btn btn-danger" id="close">닫기</button>
+        </form> 
+
+      </div>
+    </div> 
+-->
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
             <span class="navbar-brand">Navbar</span>
+            <span class="badge bg-dark">Dark 🔄</span>
             <button class="navbar-toggler" type="button">
             <span class="navbar-toggler-icon"></span>
             </button>
@@ -59,6 +78,14 @@
 
     <script>
 
+      var count = 0;
+
+      $('.badge').on('click', function() {
+        count += 1;
+        if (count % 2 == 0) {
+          document.querySelector('.badge')
+        }
+      })
       
 
       // 전송버튼 누르면
@@ -68,6 +95,11 @@
           alert('아이디입력안함');
           e.preventDefault(); // 폼 전송 막음
         }
+      });
+
+
+      document.getElementById('email').addEventListener('change', function(){
+        console.log('안녕')
       });
 
       $('#login').on('click', function(){
@@ -84,14 +116,51 @@
         $('.black-bg').removeClass('show-modal');
       })  
 
+      function 삼육구게임(n) {
+        var str = n.toString();
+        var num = str[str.length - 1];
+
+        if(num % 3 == 0 && num != 0) {
+          console.log('박수');
+        } else {
+          console.log('통과');
+        }
+      }
+
+      function 합격했냐(n1, n2){
+
+        if((n1 < 0 || n1 > 100) || (n2 < 0 || n2 > 100)) {
+          alert('0 ~ 100사이의 숫자 입력하세요.')
+        } else if((n1 + n2 >= 120) && (n1 >= 40 && n2 >= 40)) {
+          console.log('합격');
+        } else {
+          console.log('불합격');
+        }
+      }
+
+
+
 
       function checkId() {
         let userId = document.querySelector("#userId");
+        let userPw = document.querySelector("#userPw");
         let userId_val = userId.value.trim();
+        let userPw_val = userPw.value.trim();
 
-        if(userId_val === "") {
+        if(userId_val === "" && userPw_val === "") {
+          alert("아이디와 비밀번호를 입력해주세요.");
+          return false;
+        }else if(userId_val === "") {
           alert("아이디를 입력해주세요.");
           userId.focus();
+          return false;
+        } else if(userPw_val === "") {
+          alert("비밀번호를 입력해주세요.");
+          userPw.focus();
+          return false;
+        } else if(userPw_val.length < 6) {
+          alert("비밀번호 6자 미만입니다. 6자 이상 입력해주세요.");
+          userPw.focus();
           return false;
         }
         return true;
