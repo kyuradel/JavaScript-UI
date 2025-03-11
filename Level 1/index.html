@@ -82,10 +82,21 @@
 
       $('.badge').on('click', function() {
         count += 1;
-        if (count % 2 == 0) {
-          document.querySelector('.badge')
+        if (count % 2 != 0) {
+          document.querySelector('.badge').style.color = 'black';
+          document.querySelector('.badge').classList.remove('bg-dark');
+          document.querySelector('.badge').classList.add('bg-light');
+          document.querySelector('.badge').innerHTML = 'Light 🔄';
+        } else {
+          document.querySelector('.badge').style.color = 'white';
+          document.querySelector('.badge').classList.remove('bg-light');
+          document.querySelector('.badge').classList.add('bg-dark');
+          document.querySelector('.badge').innerHTML = 'Dark 🔄';
         }
       })
+
+      let age = '28';
+      const birthplace = 'korea';
       
 
       // 전송버튼 누르면
