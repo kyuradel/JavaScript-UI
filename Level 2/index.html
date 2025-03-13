@@ -119,7 +119,27 @@
         }
       });
 
+      // 1초 == 1000ms
+
+      function convertMS(m, s) {
+        return ((m * 60) + s) * 1000 
+      };
+
+      console.log(convertMS(2,10));
      
+      function discount(d, b) {
+        if (b == true) {
+          var dc = (d * 0.1).toFixed(1);
+          return d - parseInt(dc); 
+        }
+        else {
+          return d;
+        }
+      }
+
+      console.log(discount(70,true));
+
+
         var ms = 5;
 
         setInterval(function() {
