@@ -40,6 +40,18 @@
             </button>
         </div>
     </nav> 
+
+    <script>
+  
+      $(window).on('scroll', function() {
+        $(window).scrollTop(100)
+      })
+
+    </script>
+
+
+
+
     <ul class="list-group">
         <li class="list-group-item">An item</li>
         <li class="list-group-item">A second item</li>
@@ -53,6 +65,21 @@
       <button id="login" class="btn btn-danger">로그인</button>
     </div>
     
+    <div class="lorem" style="width: 200px; height: 100px; overflow-y: scroll;">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti iste molestiae maiores ullam. Possimus fuga, dolorum aliquid, delectus ipsam, veniam illum sapiente voluptas dicta fugit soluta earum quisquam amet optio.
+    </div>
+
+      <script>
+        // div의 스크롤바 내린 양 + 눈에 보이는 div 높이 == div의 실제높이
+        $('.lorem').on('scroll', function() {
+          var scrollQty = document.querySelector('.lorem').scrollTop;
+          var realHt = document.querySelector('lorem').scrollHeight;
+          var Ht = document.querySelector('.lorem').clientHeight;
+
+          console.log(scrollQty, realHt);
+        })
+      </script>
+
     <div class="alert alert-danger">
         <span class="ms">5</span>초 이내 구매시 사은품 증정!
     </div>
@@ -129,8 +156,8 @@
      
       function discount(d, b) {
         if (b == true) {
-          var dc = (d * 0.1).toFixed(1);
-          return d - parseInt(dc); 
+          var dc = d * 0.1;
+          return parseFloat((d - dc).toFixed(2)); 
         }
         else {
           return d;
