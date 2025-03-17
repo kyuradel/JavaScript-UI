@@ -41,14 +41,19 @@
         </div>
     </nav> 
 
+
     <script>
-  
-      $(window).on('scroll', function() {
-        $(window).scrollTop(100)
-      })
+      window.addEventListener('scroll', function() {
+        
+        if (window.scrollY > 100) {
+          document.querySelector('.navbar-brand').style.fontSize = '22px';
+        } else {
+          document.querySelector('.navbar-brand').style.fontSize = '25px';
+        }
+
+      });
 
     </script>
-
 
 
 
@@ -72,12 +77,19 @@
       <script>
         // div의 스크롤바 내린 양 + 눈에 보이는 div 높이 == div의 실제높이
         $('.lorem').on('scroll', function() {
-          var scrollQty = document.querySelector('.lorem').scrollTop;
-          var realHt = document.querySelector('lorem').scrollHeight;
-          var Ht = document.querySelector('.lorem').clientHeight;
+          var scrollTop = document.querySelector('.lorem').scrollTop;
+          var scrollHeight = document.querySelector('.lorem').scrollHeight;
+          var clientHeight = document.querySelector('.lorem').clientHeight;
 
-          console.log(scrollQty, realHt);
-        })
+          var diff = scrollHeight - clientHeight;
+
+          console.log(scrollTop, scrollHeight);
+
+          if (scrollTop == diff) {
+            alert('다 읽음');
+          }
+        });
+
       </script>
 
     <div class="alert alert-danger">
