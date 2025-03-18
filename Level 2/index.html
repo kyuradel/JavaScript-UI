@@ -27,9 +27,17 @@
            <button type="submit" class="btn btn-primary" id="send">전송</button>
            <button type="button" class="btn btn-danger" id="close">닫기</button>
         </form> 
-
       </div>
     </div> 
+
+    <script>
+      document.querySelector('.black-bg').addEventListener('click', function(e) {
+        if(e.target == document.querySelector('.black-bg')) {
+          document.querySelector('.black-bg').classList.remove('show-modal');
+        }
+      })
+    </script>
+
 
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
