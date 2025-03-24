@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="./detail.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    
+    <div class="container">
+        <div class="row">
+      
+      
+        </div>
+    </div> 
+    
+      <script>
+        var products = [
+          { id : 0, price : 70000, title : 'Blossom Dress' },
+          { id : 1, price : 50000, title : 'Springfield Shirt' },
+          { id : 2, price : 60000, title : 'Black Monastery' }
+        ];
+
+        function createCard(titleText, price, imgUrl) {
+            // 1. 바깥 div 만들기
+            const card = document.createElement('div');
+            card.classList.add('col-sm-4');
+
+            // 2. 이미지 태그 만들기
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            img.classList.add('w-100');
+
+            // 3. h5 태그 만들기
+            const title = document.createElement('h5');
+            title.textContent = titleText;
+
+            // 4. p 태그 만들기
+            const priceTag  = document.createElement('p');
+            priceTag.textContent = `가격 : ${price}`;
+            
+            // 5. 자식 요소들을 div 안에 넣기
+            card.appendChild(img);
+            card.appendChild(title);
+            card.appendChild(priceTag);
+
+            return card;
+            
+        }
+        
+        products.forEach(product => {
+            const Card = createCard(product.title, product.price, 'https://picsum.photos/600');
+            // 6. 완성된 카드를 원하는 곳에 붙이기
+            document.querySelector('.row').appendChild(Card);
+        })
+
+
+
+        /*
+        $.get('https://codingapple1.github.io/price.json')
+        .done(function(data){
+            console.log(data.price)
+        })
+        .fail(function(error) {
+            console.log('fail')
+        });
+        */
+      </script>
+
+        <div class="container">
+            <button class="btn btn-danger" id="more">더보기</button>
+        </div>
+
+        <script>
+
+            $('#more').click(function() {
+                $.get('https://codingapple1.github.io/js/more1.json')
+                .done((data) => {
+                    console.log(data);
+                    data.forEach((a, i) => {
+                        var 템플릿 = 
+                            `<div class="col-sm-4">
+                                <img src="https://picsum.photos/600" class="w-100">
+                                <h5>${data[i].title}</h5>
+                                <p>가격 : ${data[i].price}</p>
+                            </div>`;
+                            $('.row').append(템플릿)
+                    })
+                })
+            });
+            
+
+        </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>
