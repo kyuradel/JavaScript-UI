@@ -72,6 +72,29 @@
         */
       </script>
 
+    <div class="black-bg">
+        <div class="white-bg">
+            <h4>필터링할 가격 입력해주세요.</h4>
+
+            <form>
+                <div class="my-3">
+                    <input type="text" class="form-control" id="filter-price">
+                </div>
+                <button type="button" class="btn btn-danger" id="close">닫기</button>
+            </form> 
+        </div>
+    </div> 
+
+    <script>
+        $('#login').on('click', function(){
+            $('.black-bg').addClass('show-modal');
+        });
+
+        $('#close').on('click', function(){
+            $('.black-bg').removeClass('show-modal');
+        });  
+    </script>
+
     <div class="container">
         <button class="btn btn-danger mb-3" id="letter">다나가순정렬</button>
     </div>
@@ -101,22 +124,6 @@
             <button class="btn btn-danger mb-3" id="lower">6만원 이하 상품보기</button>
         </div>
         
-        <div class="black-bg">
-            <div class="white-bg">
-                <h4>로그인하세요</h4>
-        
-                <form action="success.html">
-                <div class="my-3">
-                    <input type="text" class="form-control" id="email">
-                    </div>
-                    <div class="my-3">
-                    <input type="password" class="form-control" id="pw">
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="send">전송</button>
-                    <button type="button" class="btn btn-danger" id="close">닫기</button>
-                </form> 
-            </div>
-        </div> 
 
         <script>
             // 2
