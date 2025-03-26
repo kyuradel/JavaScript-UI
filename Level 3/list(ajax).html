@@ -20,12 +20,48 @@
     </div> 
     
       <script>
-        var products = [
+        let products = [    // 객체 배열
           { id : 0, price : 70000, title : 'Blossom Dress' },
           { id : 1, price : 50000, title : 'Springfield Shirt' },
           { id : 2, price : 60000, title : 'Black Monastery' }
         ];
+        products.forEach((p, i) => p.originalIndex = i);
 
+        const titleArr = [];
+
+        products.forEach((a, i) => {
+            var 템플릿 = 
+                `<div class="col-sm-4">
+                    <img src="https://picsum.photos/600" class="w-100">
+                    <h5>${products[i].title}</h5>
+                    <p>가격 : ${products[i].price}</p>
+                    <button class="buy">구매</button>
+                </div>`;
+            $('.row').append(템플릿);
+        });
+
+        document.querySelector('.row').addEventListener('click', function(e) {
+            if (e.target.classList.contains('buy')) {
+                const card = e.target.closest('div');
+                const title = card.querySelector('h5').innerText;
+                console.log(title);
+                
+                if(!titleArr.includes(title)) {
+                    if (products.some(item => item.title === title)) {
+                        titleArr.push(title);
+                        localStorage.setItem('title', JSON.stringify(titleArr));
+                        
+                        const saved = JSON.parse(localStorage.getItem('title'));
+                        console.log(saved);
+                    }
+                }
+                
+                console.log(titleArr);
+                
+            }
+        });
+
+        /*
         function createCard(titleText, price, imgUrl) {
             // 1. 바깥 div 만들기
             const card = document.createElement('div');
@@ -59,7 +95,7 @@
             document.querySelector('.row').appendChild(Card);
         })
 
-
+        */
 
         /*
         $.get('https://codingapple1.github.io/price.json')
@@ -72,6 +108,34 @@
         */
       </script>
 
+    <div class="container">
+        <button class="btn btn-danger mb-3 mt-3" id="original">되돌리기버튼</button>
+    </div>
+    <script>
+        $('#original').on('click', function() {
+            products.sort(function(a, b){
+                return a.originalIndex - b.originalIndex;
+            });
+
+            $('.row').html('');
+
+            products.forEach((a, i) => {
+                var 템플릿 = 
+                    `<div class="col-sm-4">
+                        <img src="https://picsum.photos/600" class="w-100">
+                        <h5>${products[i].title}</h5>
+                        <p>가격 : ${products[i].price}</p>
+                    </div>`;
+                $('.row').append(템플릿);
+            })
+        })
+    </script>
+
+
+    <div class="container">
+        <button class="btn btn-danger mb-3" id="filter">가격필터버튼</button>
+    </div>
+
     <div class="black-bg">
         <div class="white-bg">
             <h4>필터링할 가격 입력해주세요.</h4>
@@ -80,19 +144,45 @@
                 <div class="my-3">
                     <input type="text" class="form-control" id="filter-price">
                 </div>
+                <button type="submit" class="btn btn-primary" id="send">전송</button>
                 <button type="button" class="btn btn-danger" id="close">닫기</button>
             </form> 
         </div>
     </div> 
 
     <script>
-        $('#login').on('click', function(){
+        $('#filter').on('click', function(){
             $('.black-bg').addClass('show-modal');
         });
 
         $('#close').on('click', function(){
             $('.black-bg').removeClass('show-modal');
         });  
+
+        $('form').on('submit', function(e) {
+            var filteredPrice = document.getElementById('filter-price').value;
+
+            const filtered = products.filter(function(a){
+                    return a.price == filteredPrice
+                }); 
+
+            $('.row').html('');
+
+            e.preventDefault(); // 폼 전송 막음
+
+            filtered.forEach((a, i) => {
+                var 템플릿 = 
+                    `<div class="col-sm-4">
+                        <img src="https://picsum.photos/600" class="w-100">
+                        <h5>${filtered[i].title}</h5>
+                        <p>가격 : ${filtered[i].price}</p>
+                    </div>`;
+                $('.row').append(템플릿);
+            })
+
+            $('.black-bg').removeClass('show-modal');
+            
+        });
     </script>
 
     <div class="container">
