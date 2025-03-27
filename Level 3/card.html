@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="card-background">
+        <div class="card-box">
+            <img src="imgs/card1.png" alt="">
+        </div>
+        <div class="card-box">
+            <img src="imgs/card2.png" alt="">
+        </div>
+        <div class="card-box">
+            <img src="imgs/card3.png" alt="">
+        </div>
+    </div>
+
+    <script>
+        $(window).scroll(function() {
+            var height = $(window).scrollTop();
+            console.log(height);
+            /* 650 ~ 1150 까지 스크롤바를 내리면,
+                첫째 카드의 opacity 1 ~ 0 으로 서서히 변경 */
+            /* 
+            y = a * 높이 + b
+            1 = a * 650 + b
+            0 = a * 1150 + b
+            => a = (-1/500)
+            => b = 115/50
+            */
+            
+            var scale = (-0.0002) * height + 1.13
+            $('.card-box').eq(0).css('scale', scale);
+        })
+    </script>
+
+</body>
+</html>

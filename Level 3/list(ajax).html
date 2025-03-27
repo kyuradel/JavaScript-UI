@@ -40,19 +40,22 @@
             $('.row').append(템플릿);
         });
 
+        /* 
+        // 중복 방지 
         document.querySelector('.row').addEventListener('click', function(e) {
             if (e.target.classList.contains('buy')) {
                 const card = e.target.closest('div');
                 const title = card.querySelector('h5').innerText;
                 console.log(title);
                 
-                if(!titleArr.includes(title)) {
-                    if (products.some(item => item.title === title)) {
-                        titleArr.push(title);
-                        localStorage.setItem('title', JSON.stringify(titleArr));
+                if(!titleArr.some(item => item.title === title)) {
+                    const found = products.find(item => item.title === title);
+                    if (found) {
+                        titleArr.push(found);
+                        localStorage.setItem('items', JSON.stringify(titleArr));
                         
-                        const saved = JSON.parse(localStorage.getItem('title'));
-                        console.log(saved);
+                        const savedItems = JSON.parse(localStorage.getItem('items'));
+                        console.log(savedItems);
                     }
                 }
                 
@@ -60,6 +63,33 @@
                 
             }
         });
+        */
+
+        document.querySelector('.row').addEventListener('click', function(e) {
+            if (e.target.classList.contains('buy')) {
+                const card = e.target.closest('div');
+                const title = card.querySelector('h5').innerText;
+                console.log(title);
+
+                const existing = titleArr.find(item => item.title === title);
+
+                if (existing) {
+                    existing.count = (existing.count || 1) + 1;
+                    console.log(existing.count);
+                } else {
+                    const found = products.find(item => item.title === title);
+                    if (found) {
+                        found.count = 1;
+                        titleArr.push(found);
+                        console.log(title);
+                    }
+                }
+                
+                localStorage.setItem('items', JSON.stringify(titleArr));
+                console.log(titleArr);
+            }
+        });
+
 
         /*
         function createCard(titleText, price, imgUrl) {
