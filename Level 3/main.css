@@ -31,3 +31,18 @@
     top: 400px;
     margin-top: 200px;
 }
+
+.slide-container {
+  width: 300vw;
+  display: flex;
+}
+
+.slide-box {
+  width: 100vw;
+  float: left;
+  flex-shrink: 0;
+}
+
+.slide-box img {
+  width: 100%;
+}

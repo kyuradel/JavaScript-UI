@@ -8,26 +8,118 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="card-background">
-        <div class="card-box">
-            <img src="imgs/car1.png" alt="">
-        </div>
-        <div class="card-box">
-            <img src="imgs/car2.png" alt="">
-        </div>
-        <div class="card-box">
-            <img src="imgs/car3.png" alt="">
+    <div style="overflow: hidden">
+        <div class="slide-container">
+            <div class="slide-box">
+                <img src="imgs/car1.png" draggable="false">
+            </div>
+            <div class="slide-box">
+                <img src="imgs/car2.png" draggable="false">
+            </div>
+            <div class="slide-box">
+                <img src="imgs/car3.png" draggable="false">
+            </div>
         </div>
     </div>
 
     <script>
-        $(window).scroll(function() {
-            var height = $(window).scrollTop();
-            console.log(height);
+        // 기능2. 손 놓을 때 100px 이상 이동하면 둘째사진 아니면 첫째사진
+        /* PC */
+        var startCoordinate = 0;
+        var flag = false;
+        var moved = 0;
+
+        let currentIndex = 0;
+
+        $('.slide-container').on('touchstart', function(e) {
+            startCoordinate = e.touches[0].clientX;
+            flag = true;
+        });
+
+        $(window).on('touchmove', function(e) {
+
+            if(flag) {
+                moved = e.changedTouches[0].clientX - startCoordinate;
+
+                const baseX = -currentIndex * window.innerWidth;
+                const totalMove = baseX + moved;
+
+                $('.slide-container').css('transform',
+                `translateX(${totalMove}px`)
+            }
+        });
+
+        $(window).on('touchend', function(e) {
+            if(!flag) return;
+            flag = false;
+
+            if (moved < -100) {
+                currentIndex++;
+            } else if (moved > 100) {
+                currentIndex--;
+            }
+
+            const maxIndex = $('.slide-box').length - 1;
+            if (currentIndex > maxIndex) currentIndex = maxIndex;
+            if (currentIndex < 0) currentIndex = 0;
+
+            const offset = -currentIndex * window.innerWidth;
+            $('.slide-container')
+            .css('transition', 'all 0.5s')
+            .css('transform', `translateX(${offset}px)`);
             
-            var scale = (-0.0002) * height + 1.13
-            $('.card-box').eq(0).css('scale', scale);
-        })
+            setTimeout(() => {
+                $('.slide-container').css('transition', 'none')
+            }, 500)
+
+            moved = 0;
+        });
+
+
+        /* mobile */
+        $('.slide-container').on('mousedown', function(e) {
+            startCoordinate = e.clientX;
+            flag = true;
+        });
+
+        $(window).on('mousemove', function(e) {
+
+            if(flag) {
+                moved = e.clientX - startCoordinate;
+
+                const baseX = -currentIndex * window.innerWidth;
+                const totalMove = baseX + moved;
+
+                $('.slide-container').css('transform',
+                `translateX(${totalMove}px`)
+            }
+        });
+
+        $(window).on('mouseup', function(e) {
+            if(!flag) return;
+            flag = false;
+
+            if (moved < -100) {
+                currentIndex++;
+            } else if (moved > 100) {
+                currentIndex--;
+            }
+
+            const maxIndex = $('.slide-box').length - 1;
+            if (currentIndex > maxIndex) currentIndex = maxIndex;
+            if (currentIndex < 0) currentIndex = 0;
+
+            const offset = -currentIndex * window.innerWidth;
+            $('.slide-container')
+            .css('transition', 'all 0.5s')
+            .css('transform', `translateX(${offset}px)`);
+            
+            setTimeout(() => {
+                $('.slide-container').css('transition', 'none')
+            }, 500)
+
+            moved = 0;
+        });
     </script>
 
 </body>
