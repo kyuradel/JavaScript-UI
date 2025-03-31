@@ -87,12 +87,25 @@
             if(flag) {
                 moved = e.clientX - startCoordinate;
 
-                const baseX = -currentIndex * window.innerWidth;
-                const totalMove = baseX + moved;
+                const slideWidth = window.innerWidth;
+                const baseX = -currentIndex * slideWidth;
+                const maxIndex = $('.slide-box').length - 1;
 
-                $('.slide-container').css('transform',
-                `translateX(${totalMove}px`)
-            }
+                let totalMove = baseX + moved;
+
+                // 첫 번째에서 오른쪽 드래그 → 탄성 효과
+                if (currentIndex === 0 && moved > 0) {
+                    totalMove = baseX;
+                }
+
+                // 마지막에서 왼쪽 드래그 → 탄성 효과
+                if (currentIndex === maxIndex && moved < 0) {
+                    totalMove = baseX;
+                }
+
+                $('.slide-container').css('transform', `translateX(${totalMove}px)`);
+                }
+            
         });
 
         $(window).on('mouseup', function(e) {
