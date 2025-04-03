@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="practice.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <p class="logo">집꾸미기</p>
+        <ul class="nav-links">
+            <li class="nav-list"><a href="#">Home</a></li>
+            <li class="nav-list"><a href="#">스토어</a></li>
+            <li class="nav-list"><a href="#">시공견적</a></li>
+        </ul>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e) {
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            navLinks[0].classList.add('active');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+
+    <div class="search-bar">
+        <input type="text" placeholder="검색어입력">
+    </div>
+
+    <script>
+        // 상품 필터링을 위한 코드를 추가합니다
+        document.addEventListener('DOMContentLoaded', function() {
+        // 검색창 요소 참조
+        const searchInput = document.querySelector('.search-bar input');
+        
+        // 검색 이벤트 리스너 추가
+        searchInput.addEventListener('input', filterProducts);
+        
+        // 상품 필터링 함수
+        function filterProducts() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const productCards = document.querySelectorAll('.product-card');
+            
+            // 검색어가 없으면 모든 상품 표시
+            if (searchTerm === '') {
+                productCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+
+                const noResultsMsg = document.querySelector('.no-results');
+                if(noResultsMsg) {
+                    noResultsMsg.remove();
+                }
+                return;
+            }
+
+            let matchCount = 0;
+            
+            // 각 상품 카드를 순회하면서 검색어와 일치하는지 확인
+            productCards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const brand = card.querySelector('.brand').textContent.toLowerCase();
+            
+            // 제목이나 브랜드에 검색어가 포함되어 있으면 표시, 아니면 숨김
+            if (title.includes(searchTerm) || brand.includes(searchTerm)) {
+                card.style.display = 'block';
+                matchCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if(matchCount === 0) {
+            let noResultsMsg = document.querySelector('.no-results');
+
+            if (!noResultsMsg) {
+                noResultsMsg = document.createElement('div');
+                noResultsMsg.className = 'no-results';
+                noResultsMsg.textContent = `"${searchTerm}"에 대한 검색 결과가 없습니다.`;
+            productContainer.appendChild(noResultsMsg);
+            } else {
+            // 있으면 텍스트만 업데이트
+            noResultsMsg.textContent = `"${searchTerm}"에 대한 검색 결과가 없습니다.`;
+            }
+        } else {
+            // 검색 결과가 있는 경우, "검색 결과 없음" 메시지 제거 (있다면)
+            const noResultsMsg = document.querySelector('.no-results');
+            if (noResultsMsg) {
+                noResultsMsg.remove();
+            }
+        }
+    }
+});
+    </script>
+
+
+    <div class="product-grid" id="productContainer">
+        
+    </div>
+
+    <script>
+        const products = [
+            {id: 1, name: '식기세척기', brand: '세척나라', price: 10000, image: 'pr1.JPG'},
+            {id: 2, name: '원목 침대 프레임', brand: '침대나라', price: 20000, image: 'pr2.JPG'},
+            {id: 3, name: '천연 디퓨저 세트', brand: '향기나라', price: 30000, image: 'pr3.JPG'},
+            {id: 4, name: '시원한 서큘레이터', brand: '바람나라', price: 40000, image: 'pr4.JPG'}
+        ]
+        const productContainer = document.getElementById('productContainer');
+        const fragment = document.createDocumentFragment();
+
+        function handleDragStart(e) {
+            this.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', this.dataset.productId);
+            e.dataTransfer.effectAllowed = 'copy';
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            this.classList.add('drop-highlight');
+        }
+        
+        function handleDragLeave() {
+            this.classList.remove('drop-highlight');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drop-highlight');
+
+            const productId = parseInt(e.dataTransfer.getData('text/plain'));
+            addToCart(productId);
+        }
+
+        products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            // 드래그 가능하도록 설정
+            card.setAttribute('draggable', true);
+            card.dataset.productId = product.id;
+
+            // 드래그 이벤트 설정
+            card.addEventListener('dragstart', handleDragStart);
+            card.addEventListener('dragend', handleDragEnd);
+
+            const img = document.createElement('img');
+            img.src = product.image;
+            img.alt = product.name;
+
+            const title = document.createElement('h3');
+            title.textContent = product.name;
+
+            const brand = document.createElement('p');
+            brand.className = 'brand'
+            brand.textContent = product.brand;
+
+            const price = document.createElement('p');
+            price.className = 'price';
+            price.textContent = `가격 : ${product.price.toLocaleString()}`;
+
+            const button = document.createElement('button');
+            button.className = 'buy-btn';
+            button.textContent = '담기';
+            button.addEventListener('click', () => addToCart(product.id));
+
+            card.appendChild(img);
+            card.appendChild(title);
+            card.appendChild(brand);
+            card.appendChild(price);
+            card.appendChild(button);
+
+            fragment.appendChild(card);
+        })
+
+        productContainer.appendChild(fragment);
+
+        
+    </script>
+
+    <div class="cart-container">
+        <div class="cart-header">
+            <h2>장바구니</h2>
+            <div>
+                <span>여기로 드래그</span>
+                <button id="clearCart" style="margin-left: 10px; background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">비우기</button>
+            </div>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <div class="empty-message">여기로 상품을 드래그하세요</div>
+        </div>
+        
+        <div class="cart-total">
+            <span>총 금액:</span>
+            <span id="totalAmount">0원</span>
+        </div>
+    </div>
+
+    <script>
+        const cartContainer = document.getElementById('cartItems');
+        const totalAmountElement = document.getElementById('totalAmount');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartUI();
+
+            document.getElementById('clearCart').addEventListener('click', clearCart);
+              
+        });
+
+        function clearCart() {
+            if(confirm('장바구니를 비우시겠습니까?')) {
+                cartItems = []
+                localStorage.removeItem('cartItems');
+                updateCartUI();
+            }
+        }
+
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+        cartContainer.addEventListener('dragover', handleDragOver);
+        cartContainer.addEventListener('dragenter', handleDragEnter);
+        cartContainer.addEventListener('dragleave', handleDragLeave);
+        cartContainer.addEventListener('drop', handleDrop);
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+
+            if (!product) return;
+
+            cartItems.push({
+                id: Date.now(),
+                productId: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image
+            });
+
+            updateCartUI();
+        }
+
+        function removeFromCart(cartItemId) {
+            cartItems = cartItems.filter(item => item.id !== cartItemId);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            cartContainer.innerHTML = '';
+
+            if (cartItems.length === 0) {
+                cartContainer.innerHTML = '<div class="empty-message">여기로 상품을 드래그하세요</div>';
+                totalAmountElement.textContent = '0원';
+                return;
+            }
+
+            // 장바구니 항목 추가
+            cartItems.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.alt = item.name;
+                
+                const title = document.createElement('h3');
+                title.textContent = item.name;
+                
+                const price = document.createElement('p');
+                price.className = 'price';
+                price.textContent = `${item.price.toLocaleString()}원`;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-item';
+                removeBtn.textContent = 'X';
+                removeBtn.addEventListener('click', () => removeFromCart(item.id));
+                
+                cartItem.appendChild(img);
+                cartItem.appendChild(title);
+                cartItem.appendChild(price);
+                cartItem.appendChild(removeBtn);
+                
+                cartContainer.appendChild(cartItem);
+            });
+
+            // 총 금액 계산 및 표시
+            const totalAmount = cartItems.reduce((sum, item) => sum + item.price, 0);
+            totalAmountElement.textContent = `${totalAmount.toLocaleString()}원`;
+            
+            // 장바구니 데이터를 localStorage에 저장
+            saveCartToLocalStorage();
+
+            // 구매하기 버튼 표시 (카트가 비어있지 않을 때만)
+            const cartTotalDiv = document.querySelector('.cart-total');
+            const existingButton = document.querySelector('#purchase-button');
+
+            if(cartItems.length > 0) {
+                if (!existingButton) {
+                    const purchaseButton = document.createElement('button');
+                    purchaseButton.id = 'purchase-button';
+                    purchaseButton.className = 'purchase-btn';
+                    purchaseButton.textContent = '구매하기';
+                    purchaseButton.addEventListener('click', openPurchaseModal);
+
+                    cartTotalDiv.appendChild(purchaseButton);
+                }
+            } else if (existingButton) {
+                existingButton.remove();
+            }
+        }
+
+        // 장바구니 데이터를 localStorage에 저장
+        function saveCartToLocalStorage() {
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        }
+
+    </script>
+
+    <!-- 구매 정보 입력 모달 -->
+    <div id="purchase-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>구매자 정보</h2>
+            <div class="form-group">
+                <label for="customer-name">이름</label>
+                <input type="text" id="customer-name" placeholder="이름을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for="customer-phone">연락처</label>
+                <input type="tel" id="customer-phone" placeholder="연락처를 입력하세요">
+            </div>
+            <div class="modal-buttons">
+                <button id="confirm-purchase">입력완료</button>
+                <button id="cancel-purchase">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 영수증 모달 -->
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>구매 영수증</h2>
+            <div id="receipt-content">
+                <!-- 영수증 내용이 자바스크립트로 채워집니다 -->
+            </div>
+            <div class="modal-buttons">
+                <button id="close-receipt">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 모달창 관련 함수들
+    function openPurchaseModal() {
+        const modal = document.getElementById('purchase-modal');
+        modal.style.display = 'block';
+        
+        // 닫기 버튼 이벤트 리스너
+        const closeButton = modal.querySelector('.close-button');
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        // 취소 버튼 이벤트 리스너
+        const cancelButton = document.getElementById('cancel-purchase');
+        cancelButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        // 입력완료 버튼 이벤트 리스너
+        const confirmButton = document.getElementById('confirm-purchase');
+        confirmButton.addEventListener('click', processPurchase);
+        
+        // 모달창 외부 클릭 시 닫기
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+    function processPurchase() {
+        const customerName = document.getElementById('customer-name').value.trim();
+        const customerPhone = document.getElementById('customer-phone').value.trim();
+        
+        // 입력 검증
+        if (!customerName || !customerPhone) {
+            alert('이름과 연락처를 모두 입력해주세요.');
+            return;
+        }
+        
+        // 구매 정보 모달 닫기
+        document.getElementById('purchase-modal').style.display = 'none';
+        
+        // 영수증 모달 생성 및 표시
+        generateReceipt(customerName, customerPhone);
+    }
+
+    function generateReceipt(customerName, customerPhone) {
+        // 모달 요소 참조
+        const receiptModal = document.getElementById('receipt-modal');
+        const receiptContent = document.getElementById('receipt-content');
+        
+        // 현재 날짜 생성
+        const purchaseDate = new Date();
+        const dateString = purchaseDate.toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Canvas 요소 생성
+        receiptContent.innerHTML = '<canvas id="receipt-canvas" width="400" height="600"></canvas>';
+        const canvas = document.getElementById('receipt-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 캔버스 배경색 설정
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // 영수증 제목
+        ctx.fillStyle = 'black';
+        ctx.font = 'bold 20px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('구매 영수증', canvas.width / 2, 30);
+        
+        // 구매자 정보
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText(`구매자: ${customerName}`, 20, 70);
+        ctx.fillText(`연락처: ${customerPhone}`, 20, 90);
+        ctx.fillText(`구매일시: ${dateString}`, 20, 110);
+        
+        // 구분선
+        ctx.beginPath();
+        ctx.moveTo(20, 130);
+        ctx.lineTo(canvas.width - 20, 130);
+        ctx.stroke();
+        
+        // 상품 목록 헤더
+        ctx.font = 'bold 14px Arial';
+        ctx.fillText('상품명', 20, 150);
+        ctx.textAlign = 'right';
+        ctx.fillText('가격', canvas.width - 20, 150);
+        ctx.textAlign = 'left';
+        
+        // 상품 목록
+        let y = 180;
+        let totalAmount = 0;
+        
+        cartItems.forEach(item => {
+            ctx.fillText(item.name, 20, y);
+            ctx.textAlign = 'right';
+            ctx.fillText(`${item.price.toLocaleString()}원`, canvas.width - 20, y);
+            ctx.textAlign = 'left';
+            totalAmount += item.price;
+            y += 25;
+        });
+        
+        // 구분선
+        ctx.beginPath();
+        ctx.moveTo(20, y + 10);
+        ctx.lineTo(canvas.width - 20, y + 10);
+        ctx.stroke();
+        
+        // 총액
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'right';
+        ctx.fillText(`총 금액: ${totalAmount.toLocaleString()}원`, canvas.width - 20, y + 40);
+        
+        // 감사 메시지
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('구매해 주셔서 감사합니다!', canvas.width / 2, y + 40);
+        
+        // 다운로드 버튼 추가
+        const downloadButton = document.createElement('button');
+        downloadButton.textContent = '영수증 저장하기';
+        downloadButton.className = 'download-btn';
+        downloadButton.addEventListener('click', () => {
+            // 캔버스를 이미지로 변환
+            const image = canvas.toDataURL('image/png');
+            
+            // 다운로드 링크 생성
+            const link = document.createElement('a');
+            link.download = `영수증_${Date.now()}.png`;
+            link.href = image;
+            link.click();
+        });
+        
+        receiptContent.appendChild(downloadButton);
+        
+        // 영수증 모달 표시
+        receiptModal.style.display = 'block';
+        
+        // 닫기 버튼 이벤트 리스너
+        const closeButton = receiptModal.querySelector('.close-button');
+        closeButton.addEventListener('click', () => {
+            receiptModal.style.display = 'none';
+            clearCartAfterPurchase();
+        });
+        
+        // 닫기 버튼 이벤트 리스너
+        const closeReceiptButton = document.getElementById('close-receipt');
+        closeReceiptButton.addEventListener('click', () => {
+            receiptModal.style.display = 'none';
+            clearCartAfterPurchase();
+        });
+        
+        // 모달창 외부 클릭 시 닫기
+        window.addEventListener('click', (event) => {
+            if (event.target === receiptModal) {
+                receiptModal.style.display = 'none';
+                clearCartAfterPurchase();
+            }
+        });
+    }
+
+    function clearCartAfterPurchase() {
+        // 장바구니 비우기
+        cartItems = [];
+        localStorage.removeItem('cartItems');
+        updateCartUI();
+        alert('구매가 완료되었습니다. 감사합니다!');
+    }
+    </script>
+</body>
+</html> 
