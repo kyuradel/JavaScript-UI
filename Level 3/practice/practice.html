@@ -109,14 +109,8 @@
     </div>
 
     <script>
-        const products = [
-            {id: 1, name: '식기세척기', brand: '세척나라', price: 10000, image: 'pr1.JPG'},
-            {id: 2, name: '원목 침대 프레임', brand: '침대나라', price: 20000, image: 'pr2.JPG'},
-            {id: 3, name: '천연 디퓨저 세트', brand: '향기나라', price: 30000, image: 'pr3.JPG'},
-            {id: 4, name: '시원한 서큘레이터', brand: '바람나라', price: 40000, image: 'pr4.JPG'}
-        ]
-        const productContainer = document.getElementById('productContainer');
-        const fragment = document.createDocumentFragment();
+        
+        
 
         function handleDragStart(e) {
             this.classList.add('dragging');
@@ -150,49 +144,61 @@
             addToCart(productId);
         }
 
-        products.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            // 드래그 가능하도록 설정
-            card.setAttribute('draggable', true);
-            card.dataset.productId = product.id;
-
-            // 드래그 이벤트 설정
-            card.addEventListener('dragstart', handleDragStart);
-            card.addEventListener('dragend', handleDragEnd);
-
-            const img = document.createElement('img');
-            img.src = product.image;
-            img.alt = product.name;
-
-            const title = document.createElement('h3');
-            title.textContent = product.name;
-
-            const brand = document.createElement('p');
-            brand.className = 'brand'
-            brand.textContent = product.brand;
-
-            const price = document.createElement('p');
-            price.className = 'price';
-            price.textContent = `가격 : ${product.price.toLocaleString()}`;
-
-            const button = document.createElement('button');
-            button.className = 'buy-btn';
-            button.textContent = '담기';
-            button.addEventListener('click', () => addToCart(product.id));
-
-            card.appendChild(img);
-            card.appendChild(title);
-            card.appendChild(brand);
-            card.appendChild(price);
-            card.appendChild(button);
-
-            fragment.appendChild(card);
+        fetch('store.json')
+        .then(response => response.json())
+        .then(data => {
+            products = data.products;
+            renderProducts();
         })
+        .catch(error => console.log('상품 데이터를 불러오는 중 오류 발생:', error));
 
-        productContainer.appendChild(fragment);
+        function renderProducts() {
+            const productContainer = document.getElementById('productContainer');
+            const fragment = document.createDocumentFragment();
 
-        
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                // 드래그 가능하도록 설정
+                card.setAttribute('draggable', true);
+                card.dataset.productId = product.id;
+
+                // 드래그 이벤트 설정
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+
+                const img = document.createElement('img');
+                img.src = product.photo;
+                img.alt = product.title;
+
+                const title = document.createElement('h3');
+                title.textContent = product.title;
+
+                const brand = document.createElement('p');
+                brand.className = 'brand'
+                brand.textContent = product.brand;
+
+                const price = document.createElement('p');
+                price.className = 'price';
+                price.textContent = `가격 : ${product.price.toLocaleString()}`;
+
+                const button = document.createElement('button');
+                button.className = 'buy-btn';
+                button.textContent = '담기';
+                button.addEventListener('click', () => addToCart(product.id));
+
+                card.appendChild(img);
+                card.appendChild(title);
+                card.appendChild(brand);
+                card.appendChild(price);
+                card.appendChild(button);
+
+                fragment.appendChild(card);
+            })
+
+            productContainer.appendChild(fragment);
+        }
+    
     </script>
 
     <div class="cart-container">
@@ -248,9 +254,9 @@
             cartItems.push({
                 id: Date.now(),
                 productId: product.id,
-                name: product.name,
+                name: product.title,
                 price: product.price,
-                image: product.image
+                photo: product.photo
             });
 
             updateCartUI();
@@ -276,7 +282,7 @@
                 cartItem.className = 'cart-item';
                 
                 const img = document.createElement('img');
-                img.src = item.image;
+                img.src = item.photo;
                 img.alt = item.name;
                 
                 const title = document.createElement('h3');
@@ -498,12 +504,12 @@
         downloadButton.className = 'download-btn';
         downloadButton.addEventListener('click', () => {
             // 캔버스를 이미지로 변환
-            const image = canvas.toDataURL('image/png');
+            const photo = canvas.toDataURL('photo/png');
             
             // 다운로드 링크 생성
             const link = document.createElement('a');
             link.download = `영수증_${Date.now()}.png`;
-            link.href = image;
+            link.href = photo;
             link.click();
         });
         
